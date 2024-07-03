@@ -1,4 +1,42 @@
-# 🏗 Scaffold-ETH 2
+# OracleReader based on Scaffold-ETH 2
+
+To run this example, which uses the Foundry tooling, we first need to fork the [Sepolia network](https://sepolia.etherscan.io/). 
+
+In a terminal window do
+
+```
+export ETH_RPC_URL='https://your-sepolia-rpc-server/etc'
+yarn chainsep
+```
+
+In a second terminal window do
+
+```
+export DEPLOYER_PRIVATE_KEY="0xdeadbeefcafebabe"
+cd packages/foundry
+cp .env.example .env
+yarn deploy
+```
+
+when this completes, you should be see a contract address in the output:
+
+```
+...
+##### sepolia
+✅  [Success]Hash: 0xda5b4871929d1414a5b447769f4d8d757b1aea8e280555adb9dd7ec67bb6b683
+Contract Address: 0xA2B4473120b9d18abfE90EEb2722A57CB72C4212
+```
+
+Now, you can verify that you can read with the Foundry `cast` command:
+
+```
+🦄 cast call 0xA2B4473120b9d18abfE90EEb2722A57CB72C4212 'read()(uint)'
+3319415000000000000000 [3.319e21]
+```
+
+Note that because this is a fork of the Sepolia network, you should be getting a pretty up-to-date value for `ETH/USD`.
+
+# 🏗 Scaffold-ETH 2 [ORIGINAL README]
 
 <h4 align="center">
   <a href="https://docs.scaffoldeth.io">Documentation</a> |
@@ -7,7 +45,7 @@
 
 🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
 
-⚙️ Built using NextJS, RainbowKit, Hardhat, Wagmi, Viem, and Typescript.
+⚙️ Built using NextJS, RainbowKit, Foundry, Wagmi, Viem, and Typescript.
 
 - ✅ **Contract Hot Reload**: Your frontend auto-adapts to your smart contract as you edit it.
 - 🪝 **[Custom hooks](https://docs.scaffoldeth.io/hooks/)**: Collection of React hooks wrapper around [wagmi](https://wagmi.sh/) to simplify interactions with smart contracts with typescript autocompletion.
@@ -29,11 +67,10 @@ Before you begin, you need to install the following tools:
 
 To get started with Scaffold-ETH 2, follow the steps below:
 
-1. Clone this repo & install dependencies
+1. Install dependencies if it was skipped in CLI:
 
 ```
-git clone https://github.com/scaffold-eth/scaffold-eth-2.git
-cd scaffold-eth-2
+cd my-dapp-example
 yarn install
 ```
 
@@ -43,7 +80,7 @@ yarn install
 yarn chain
 ```
 
-This command starts a local Ethereum network using Hardhat. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `hardhat.config.ts`.
+This command starts a local Ethereum network using Foundry. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `packages/foundry/foundry.toml`.
 
 3. On a second terminal, deploy the test contract:
 
@@ -51,7 +88,7 @@ This command starts a local Ethereum network using Hardhat. The network runs on 
 yarn deploy
 ```
 
-This command deploys a test smart contract to the local network. The contract is located in `packages/hardhat/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/hardhat/deploy` to deploy the contract to the network. You can also customize the deploy script.
+This command deploys a test smart contract to the local network. The contract is located in `packages/foundry/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/foundry/script` to deploy the contract to the network. You can also customize the deploy script.
 
 4. On a third terminal, start your NextJS app:
 
@@ -61,11 +98,12 @@ yarn start
 
 Visit your app on: `http://localhost:3000`. You can interact with your smart contract using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
 
-Run smart contract test with `yarn hardhat:test`
+Run smart contract test with `yarn foundry:test`
 
-- Edit your smart contract `YourContract.sol` in `packages/hardhat/contracts`
-- Edit your frontend in `packages/nextjs/pages`
-- Edit your deployment scripts in `packages/hardhat/deploy`
+- Edit your smart contract `YourContract.sol` in `packages/foundry/contracts`
+- Edit your frontend homepage at `packages/nextjs/app/page.tsx`. For guidance on [routing](https://nextjs.org/docs/app/building-your-application/routing/defining-routes) and configuring [pages/layouts](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts) checkout the Next.js documentation.
+- Edit your deployment scripts in `packages/foundry/script`
+
 
 ## Documentation
 

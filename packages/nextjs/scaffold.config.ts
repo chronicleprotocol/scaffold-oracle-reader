@@ -6,12 +6,11 @@ export type ScaffoldConfig = {
   alchemyApiKey: string;
   walletConnectProjectId: string;
   onlyLocalBurnerWallet: boolean;
-  walletAutoConnect: boolean;
 };
 
 const scaffoldConfig = {
   // The networks on which your DApp is live
-  targetNetworks: [chains.hardhat],
+  targetNetworks: [chains.foundry],
 
   // The interval at which your front-end polls the RPC servers for new data
   // it has no effect if you only target the local network (default is 4000)
@@ -31,13 +30,6 @@ const scaffoldConfig = {
 
   // Only show the Burner Wallet when running on hardhat network
   onlyLocalBurnerWallet: true,
-
-  /**
-   * Auto connect:
-   * 1. If the user was connected into a wallet before, on page reload reconnect automatically
-   * 2. If user is not connected to any wallet:  On reload, connect to burner wallet if burnerWallet.enabled is true && burnerWallet.onlyLocal is false
-   */
-  walletAutoConnect: true,
 } as const satisfies ScaffoldConfig;
 
 export default scaffoldConfig;
