@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { Address } from "viem";
-import { useAccountBalance } from "~~/hooks/scaffold-eth";
+import { Address, formatEther } from "viem";
+import { useDisplayUsdMode } from "~~/hooks/scaffold-eth/useDisplayUsdMode";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
+import { useWatchBalance } from "~~/hooks/scaffold-eth/useWatchBalance";
+import { useGlobalState } from "~~/services/store/store";
 
 type BalanceProps = {
   address?: Address;
@@ -16,16 +17,20 @@ type BalanceProps = {
  */
 export const Balance = ({ address, className = "", usdMode }: BalanceProps) => {
   const { targetNetwork } = useTargetNetwork();
-  const { balance, price, isError, isLoading } = useAccountBalance(address);
-  const [displayUsdMode, setDisplayUsdMode] = useState(price > 0 ? Boolean(usdMode) : false);
+  const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrency.price);
+  const isNativeCurrencyPriceFetching = useGlobalState(state => state.nativeCurrency.isFetching);
 
-  const toggleBalanceMode = () => {
-    if (price > 0) {
-      setDisplayUsdMode(prevMode => !prevMode);
-    }
-  };
+  const {
+    data: balance,
+    isError,
+    isLoading,
+  } = useWatchBalance({
+    address,
+  });
 
-  if (!address || isLoading || balance === null) {
+  const { displayUsdMode, toggleDisplayUsdMode } = useDisplayUsdMode({ defaultUsdMode: usdMode });
+
+  if (!address || isLoading || balance === null || (isNativeCurrencyPriceFetching && nativeCurrencyPrice === 0)) {
     return (
       <div className="animate-pulse flex space-x-4">
         <div className="rounded-md bg-slate-300 h-6 w-6"></div>
@@ -44,20 +49,22 @@ export const Balance = ({ address, className = "", usdMode }: BalanceProps) => {
     );
   }
 
+  const formattedBalance = balance ? Number(formatEther(balance.value)) : 0;
+
   return (
     <button
       className={`btn btn-sm btn-ghost flex flex-col font-normal items-center hover:bg-transparent ${className}`}
-      onClick={toggleBalanceMode}
+      onClick={toggleDisplayUsdMode}
     >
       <div className="w-full flex items-center justify-center">
         {displayUsdMode ? (
           <>
             <span className="text-[0.8em] font-bold mr-1">$</span>
-            <span>{(balance * price).toFixed(2)}</span>
+            <span>{(formattedBalance * nativeCurrencyPrice).toFixed(2)}</span>
           </>
         ) : (
           <>
-            <span>{balance?.toFixed(4)}</span>
+            <span>{formattedBalance.toFixed(4)}</span>
             <span className="text-[0.8em] font-bold ml-1">{targetNetwork.nativeCurrency.symbol}</span>
           </>
         )}

@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { Address as AddressType, isAddress } from "viem";
+import { Address as AddressType, getAddress, isAddress } from "viem";
 import { hardhat } from "viem/chains";
+import { normalize } from "viem/ens";
 import { useEnsAvatar, useEnsName } from "wagmi";
 import { CheckCircleIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
@@ -35,15 +36,24 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
   const [ens, setEns] = useState<string | null>();
   const [ensAvatar, setEnsAvatar] = useState<string | null>();
   const [addressCopied, setAddressCopied] = useState(false);
+  const checkSumAddress = address ? getAddress(address) : undefined;
 
   const { targetNetwork } = useTargetNetwork();
 
-  const { data: fetchedEns } = useEnsName({ address, enabled: isAddress(address ?? ""), chainId: 1 });
-  const { data: fetchedEnsAvatar } = useEnsAvatar({
-    name: fetchedEns,
-    enabled: Boolean(fetchedEns),
+  const { data: fetchedEns } = useEnsName({
+    address: checkSumAddress,
     chainId: 1,
-    cacheTime: 30_000,
+    query: {
+      enabled: isAddress(checkSumAddress ?? ""),
+    },
+  });
+  const { data: fetchedEnsAvatar } = useEnsAvatar({
+    name: fetchedEns ? normalize(fetchedEns) : undefined,
+    chainId: 1,
+    query: {
+      enabled: Boolean(fetchedEns),
+      gcTime: 30_000,
+    },
   });
 
   // We need to apply this pattern to avoid Hydration errors.
@@ -56,7 +66,7 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
   }, [fetchedEnsAvatar]);
 
   // Skeleton UI
-  if (!address) {
+  if (!checkSumAddress) {
     return (
       <div className="animate-pulse flex space-x-4">
         <div className="rounded-md bg-slate-300 h-6 w-6"></div>
@@ -67,24 +77,24 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
     );
   }
 
-  if (!isAddress(address)) {
+  if (!isAddress(checkSumAddress)) {
     return <span className="text-error">Wrong address</span>;
   }
 
-  const blockExplorerAddressLink = getBlockExplorerAddressLink(targetNetwork, address);
-  let displayAddress = address?.slice(0, 5) + "..." + address?.slice(-4);
+  const blockExplorerAddressLink = getBlockExplorerAddressLink(targetNetwork, checkSumAddress);
+  let displayAddress = checkSumAddress?.slice(0, 6) + "..." + checkSumAddress?.slice(-4);
 
   if (ens) {
     displayAddress = ens;
   } else if (format === "long") {
-    displayAddress = address;
+    displayAddress = checkSumAddress;
   }
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center flex-shrink-0">
       <div className="flex-shrink-0">
         <BlockieAvatar
-          address={address}
+          address={checkSumAddress}
           ensImage={ensAvatar}
           size={(blockieSizeMap[size] * 24) / blockieSizeMap["base"]}
         />
@@ -107,12 +117,12 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
       )}
       {addressCopied ? (
         <CheckCircleIcon
-          className="ml-1.5 text-xl font-normal text-sky-600 h-5 w-5 cursor-pointer"
+          className="ml-1.5 text-xl font-normal text-sky-600 h-5 w-5 cursor-pointer flex-shrink-0"
           aria-hidden="true"
         />
       ) : (
         <CopyToClipboard
-          text={address}
+          text={checkSumAddress}
           onCopy={() => {
             setAddressCopied(true);
             setTimeout(() => {
@@ -121,7 +131,7 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
           }}
         >
           <DocumentDuplicateIcon
-            className="ml-1.5 text-xl font-normal text-sky-600 h-5 w-5 cursor-pointer"
+            className="ml-1.5 text-xl font-normal text-sky-600 h-5 w-5 cursor-pointer flex-shrink-0"
             aria-hidden="true"
           />
         </CopyToClipboard>
