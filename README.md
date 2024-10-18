@@ -28,8 +28,9 @@ To run this example, which uses the Foundry tooling in conjunction with [Scaffol
 
 In a terminal window install dependencies:
 
+
 ```
-cd my-dapp-example
+cd scaffold-oracle-reader
 yarn install
 ```
 
@@ -59,6 +60,9 @@ When this completes, you should see a contract address in the output:
 ✅  [Success]Hash: 0xda5b4871929d1414a5b447769f4d8d757b1aea8e280555adb9dd7ec67bb6b683
 Contract Address: 0xA2B4473120b9d18abfE90EEb2722A57CB72C4212
 ```
+
+Grab the address of the deployed contract.
+Add it to packages/nextjs/contracts/deployedContracts.ts#LN10
 
 Now, you can verify that you can read with the Foundry `cast` command:
 
