@@ -1,5 +1,7 @@
 node_modules
 
+packages/foundry/broadcast/
+
 # dependencies, yarn, etc
 # yarn / eslint
 .yarn/*
