@@ -7,70 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     OracleReader: {
-      address: "0x5fbdb2315678afecb367f032d93f642f64180aa3",
-      abi: [
-        {
-          type: "constructor",
-          inputs: [
-            {
-              name: "chronicle_",
-              type: "address",
-              internalType: "address",
-            },
-            {
-              name: "selfKisser_",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "chronicle",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "address",
-              internalType: "contract IChronicle",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "read",
-          inputs: [],
-          outputs: [
-            {
-              name: "val",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "selfKisser",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "address",
-              internalType: "contract ISelfKisser",
-            },
-          ],
-          stateMutability: "view",
-        },
-      ],
-      inheritedFunctions: {},
-    },
-  },
-  11155111: {
-    OracleReader: {
-      address: "0xa2b4473120b9d18abfe90eeb2722a57cb72c4212",
+      address: "0x662ca006be8dbe05545ac9af490460c217fda562",
       abi: [
         {
           type: "constructor",
