@@ -61,9 +61,6 @@ When this completes, you should see a contract address in the output:
 Contract Address: 0xA2B4473120b9d18abfE90EEb2722A57CB72C4212
 ```
 
-Grab the address of the deployed contract.
-Add it to packages/nextjs/contracts/deployedContracts.ts#LN10
-
 Now, you can verify that you can read with the Foundry `cast` command:
 
 ```
