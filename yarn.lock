@@ -1618,7 +1618,7 @@ __metadata:
     ethers: ~5.7.1
     prettier: ~2.8.8
     qrcode: ~1.5.3
-    toml: ~3.0.0
+    toml: ~4.2.0
   languageName: unknown
   linkType: soft
 
@@ -10019,10 +10019,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"toml@npm:~3.0.0":
-  version: 3.0.0
-  resolution: "toml@npm:3.0.0"
-  checksum: 5d7f1d8413ad7780e9bdecce8ea4c3f5130dd53b0a4f2e90b93340979a137739879d7b9ce2ce05c938b8cc828897fe9e95085197342a1377dd8850bf5125f15f
+"toml@npm:~4.2.0":
+  version: 4.2.0
+  resolution: "toml@npm:4.2.0"
+  checksum: b13915fc80ddbfa498c9d538292846350f94bf4c2f80e21d14db17370abf0470c65ea925d321c26188cd83395753a88da0c498f203ac9077dea4e53f1694cf4e
   languageName: node
   linkType: hard
 
